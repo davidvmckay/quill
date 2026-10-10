@@ -291,5 +291,30 @@ describe('Syntax', () => {
       const quill = createQuill();
       expect(quill.getSemanticHTML()).toContain('data-language="javascript"');
     });
+
+    test.each([
+      'plain" onmouseover="alert(1)',
+      'plain"><img src=x onerror=alert(1)>',
+      'a&b<"\'',
+    ])('escapes language %s', (language) => {
+      const quill = createQuill();
+      quill.setContents(
+        new Delta().insert('const a = "<&>";').insert('\n', {
+          'code-block': language,
+        }),
+      );
+      const exported = document.createElement('template');
+      exported.innerHTML = quill.getSemanticHTML();
+
+      expect(exported.content.querySelectorAll('pre')).toHaveLength(1);
+      const code = exported.content.querySelector('pre')!;
+      expect(code.getAttribute('data-language')).toBe(language);
+      expect(Array.from(code.attributes, ({ name }) => name)).toEqual([
+        'data-language',
+      ]);
+      expect(code.textContent).toBe('const a = "<&>";\n');
+      expect(code.children).toHaveLength(0);
+      expect(exported.content.querySelectorAll('img, script')).toHaveLength(0);
+    });
   });
 });

@@ -1,3 +1,11 @@
+# Unreleased
+
+## Security
+
+- Fix CVE-2025-15056 by escaping formula and video values in HTML exports.
+- Escape syntax code block language attributes in HTML exports.
+- Require lodash-es 4.18.1 or later to address CVE-2026-4800.
+
 # v2.0.2 (2024-05-13)
 
 <!-- Release notes generated using configuration in .github/release.yml at v2.0.2 -->
