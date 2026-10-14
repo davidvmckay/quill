@@ -64,6 +64,10 @@ export default class EditorPage {
   async open() {
     await this.page.goto('/');
     await this.page.waitForSelector('.ql-editor', { timeout: 10000 });
+    await this.page.waitForFunction(() => {
+      // @ts-expect-error The test page exposes its initialized editor.
+      return !!window.quill;
+    });
   }
 
   async html(content: string, title = '') {

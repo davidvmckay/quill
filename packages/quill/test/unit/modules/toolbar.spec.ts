@@ -244,5 +244,21 @@ describe('Toolbar', () => {
       quill.format('bold', true, 'user');
       expect(boldButton?.classList.contains('ql-active')).toBe(true);
     });
+
+    test('keeps formatting state while keyboard focus is in the toolbar', () => {
+      const { container, quill } = setup();
+      const boldButton = container.parentNode?.querySelector(
+        'button.ql-bold',
+      ) as HTMLButtonElement;
+      quill.setSelection(7);
+      expect(boldButton.getAttribute('aria-pressed')).toBe('true');
+      boldButton.focus();
+      const toolbar = quill.getModule('toolbar') as Toolbar;
+      toolbar.update(null);
+      expect(boldButton.getAttribute('aria-pressed')).toBe('true');
+      quill.root.focus();
+      toolbar.update(null);
+      expect(boldButton.getAttribute('aria-pressed')).toBe('false');
+    });
   });
 });

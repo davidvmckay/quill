@@ -45,6 +45,13 @@ class Toolbar extends Module<ToolbarProps> {
       return;
     }
     this.container.classList.add('ql-toolbar');
+    this.container.setAttribute('role', 'toolbar');
+    if (
+      !this.container.hasAttribute('aria-label') &&
+      !this.container.hasAttribute('aria-labelledby')
+    ) {
+      this.container.setAttribute('aria-label', 'Formatting');
+    }
     this.controls = [];
     this.handlers = {};
     if (this.options.handlers) {
@@ -79,6 +86,15 @@ class Toolbar extends Module<ToolbarProps> {
     format = format.slice('ql-'.length);
     if (input.tagName === 'BUTTON') {
       input.setAttribute('type', 'button');
+    }
+    if (
+      !input.hasAttribute('aria-label') &&
+      !input.hasAttribute('aria-labelledby') &&
+      !(input as HTMLButtonElement | HTMLSelectElement).labels?.length &&
+      (input.tagName === 'SELECT' || !input.textContent?.trim())
+    ) {
+      const value = input.getAttribute('value');
+      input.setAttribute('aria-label', value ? `${format}: ${value}` : format);
     }
     if (
       this.handlers[format] == null &&
@@ -137,6 +153,9 @@ class Toolbar extends Module<ToolbarProps> {
   }
 
   update(range: Range | null) {
+    // Keep the last formatting state available while navigating the toolbar.
+    if (range == null && this.container?.contains(document.activeElement))
+      return;
     const formats = range == null ? {} : this.quill.getFormat(range);
     this.controls.forEach((pair) => {
       const [format, input] = pair;

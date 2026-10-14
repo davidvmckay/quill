@@ -20,12 +20,12 @@ describe('Picker', () => {
     expect(
       container.querySelector('.ql-picker-item.ql-selected')?.outerHTML,
     ).toEqualHTML(
-      '<span tabindex="0" role="button" class="ql-picker-item ql-selected" data-label="0"></span>',
+      '<span tabindex="-1" role="option" aria-label="0" aria-selected="true" class="ql-picker-item ql-selected" data-label="0"></span>',
     );
     expect(
       container.querySelector('.ql-picker-item:not(.ql-selected)')?.outerHTML,
     ).toEqualHTML(
-      '<span tabindex="0" role="button" class="ql-picker-item" data-value="1" data-label="1"></span>',
+      '<span tabindex="-1" role="option" aria-label="1" aria-selected="false" class="ql-picker-item" data-value="1" data-label="1"></span>',
     );
   });
 
@@ -39,6 +39,120 @@ describe('Picker', () => {
     option.value = value;
     value = value.replace(/"/g, '\\"');
     expect(select.querySelector(`option[value="${value}"]`)).toEqual(option);
+  });
+
+  test('exposes a named listbox and selected value', () => {
+    const { pickerSelectorInstance: picker } = setup();
+    expect(picker.label.getAttribute('aria-haspopup')).toBe('listbox');
+    expect(picker.label.getAttribute('aria-label')).toBe('Formatting: 0');
+    expect(picker.options.getAttribute('role')).toBe('listbox');
+    expect(picker.options.getAttribute('aria-label')).toBe('Formatting');
+  });
+
+  test('arrow keys and Home/End move focus without selecting', () => {
+    const { pickerSelectorInstance: picker } = setup();
+    const key = (element: HTMLElement, value: string) => {
+      const event = new KeyboardEvent('keydown', {
+        key: value,
+        cancelable: true,
+      });
+      element.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(true);
+    };
+    const [first, last] = Array.from(picker.options.children) as HTMLElement[];
+    key(picker.label, 'ArrowDown');
+    expect(document.activeElement).toBe(first);
+    key(first, 'End');
+    expect(document.activeElement).toBe(last);
+    expect(picker.select.selectedIndex).toBe(0);
+    key(last, 'ArrowUp');
+    expect(document.activeElement).toBe(first);
+    key(first, 'ArrowDown');
+    key(last, 'Home');
+    expect(document.activeElement).toBe(first);
+    key(first, 'End');
+    key(last, 'Enter');
+    expect(picker.select.value).toBe('1');
+    expect(last.getAttribute('aria-selected')).toBe('true');
+    expect(first.getAttribute('aria-selected')).toBe('false');
+    expect(picker.label.getAttribute('aria-label')).toBe('Formatting: 1');
+    expect(document.activeElement).toBe(picker.label);
+    expect(picker.label.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  test('Space opens the menu and Escape restores focus', () => {
+    const { pickerSelectorInstance: picker } = setup();
+    picker.label.dispatchEvent(
+      new KeyboardEvent('keydown', { key: ' ', cancelable: true }),
+    );
+    expect(picker.label.getAttribute('aria-expanded')).toBe('true');
+    const item = document.activeElement as HTMLElement;
+    item.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', cancelable: true }),
+    );
+    expect(document.activeElement).toBe(picker.label);
+    expect(picker.label.getAttribute('aria-expanded')).toBe('false');
+    expect(
+      Array.from(picker.options.children).every(
+        (option) => (option as HTMLElement).tabIndex === -1,
+      ),
+    ).toBe(true);
+  });
+
+  test('Tab closes the menu without preventing native focus traversal', () => {
+    const { pickerSelectorInstance: picker } = setup();
+    picker.label.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowDown' }),
+    );
+    const event = new KeyboardEvent('keydown', {
+      key: 'Tab',
+      cancelable: true,
+    });
+    document.activeElement?.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(false);
+    expect(picker.label.getAttribute('aria-expanded')).toBe('false');
+  });
+
+  test('labels generated header options and preserves a native label', () => {
+    const container = document.body.appendChild(document.createElement('div'));
+    container.innerHTML =
+      '<label for="heading">Choose heading</label><select id="heading" class="ql-header"><option selected></option><option value="1"></option><option value="2"></option></select>';
+    const picker = new Picker(container.querySelector('select')!);
+    expect(container.querySelectorAll('#heading')).toHaveLength(1);
+    expect(picker.options.getAttribute('aria-label')).toBe('Choose heading');
+    expect(
+      Array.from(picker.options.children, (item) =>
+        item.getAttribute('aria-label'),
+      ),
+    ).toEqual(['Normal text', 'Heading 1', 'Heading 2']);
+  });
+
+  test('keyboard navigation skips disabled options', () => {
+    const container = document.body.appendChild(document.createElement('div'));
+    container.innerHTML =
+      '<select aria-label="Size"><option selected>Small</option><option disabled>Medium</option><option>Large</option></select>';
+    const picker = new Picker(container.querySelector('select')!);
+    picker.label.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowDown' }),
+    );
+    document.activeElement?.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowDown' }),
+    );
+    expect(document.activeElement).toBe(picker.options.children[2]);
+  });
+
+  test('typeahead focuses a matching option', () => {
+    const container = document.body.appendChild(document.createElement('div'));
+    container.innerHTML =
+      '<select><option selected>Small</option><option>Medium</option><option>Large</option></select>';
+    const picker = new Picker(container.querySelector('select')!);
+    picker.label.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'ArrowDown' }),
+    );
+    document.activeElement?.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'l', cancelable: true }),
+    );
+    expect(document.activeElement).toBe(picker.options.children[2]);
   });
 
   test('label is initialized with the correct aria attributes', () => {

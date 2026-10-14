@@ -128,6 +128,15 @@ getSemanticHTML(index: number = 0, length: number = remaining): string
 const html = quill.getSemanticHTML(0, 10);
 ```
 
+Ordinary spaces remain ordinary, breakable spaces. Significant whitespace (such
+as consecutive spaces, leading/trailing spaces, tabs, and existing nonbreaking
+spaces) is preserved in spans with `white-space: pre-wrap`. Quill's clipboard
+import preserves that whitespace when re-importing the exported HTML.
+
+HTML export produces readable fallbacks for formula and video embeds: escaped
+formula text and a video link, respectively. Use `getContents()` and store the
+Delta when you need to retain those embed types for later editing.
+
 ### insertEmbed
 
 Insert embedded content into the editor, returning a [Delta](/docs/delta/) representing the change. [Source](/docs/api/#events) may be `"user"`, `"api"`, or `"silent"`. Calls where the `source` is `"user"` when the editor is [disabled](#disable) are ignored.

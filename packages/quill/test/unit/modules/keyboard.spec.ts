@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest';
+import Quill from '../../../src/core.js';
 import Keyboard, {
   SHORTKEY,
   normalize,
@@ -22,6 +23,44 @@ const createKeyboardEvent = (key: string, override?: Partial<KeyboardEvent>) =>
   });
 
 describe('Keyboard', () => {
+  test.each([false, true])(
+    'navigate mode leaves Tab (shift=%s) to the browser',
+    (shiftKey) => {
+      const container = document.body.appendChild(
+        document.createElement('div'),
+      );
+      const quill = new Quill(container, {
+        modules: { keyboard: { tabBehavior: 'navigate' } },
+      });
+      quill.setText('text');
+      quill.setSelection(0);
+      const event = new KeyboardEvent('keydown', {
+        key: 'Tab',
+        shiftKey,
+        bubbles: true,
+        cancelable: true,
+      });
+      quill.root.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(false);
+      expect(quill.getText()).toBe('text\n');
+    },
+  );
+
+  test('default mode still inserts a tab', () => {
+    const container = document.body.appendChild(document.createElement('div'));
+    const quill = new Quill(container);
+    quill.setText('text');
+    quill.setSelection(0);
+    const event = new KeyboardEvent('keydown', {
+      key: 'Tab',
+      bubbles: true,
+      cancelable: true,
+    });
+    quill.root.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(true);
+    expect(quill.getText()).toBe('\ttext\n');
+  });
+
   describe('match', () => {
     test('no modifiers', () => {
       const binding = normalize({

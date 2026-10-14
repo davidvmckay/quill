@@ -370,8 +370,13 @@ function convertHTML(
     return blot.html(index, length);
   }
   if (blot instanceof TextBlot) {
-    const escapedText = escapeText(blot.value().slice(index, index + length));
-    return escapedText.replaceAll(' ', '&nbsp;');
+    const text = blot.value().slice(index, index + length);
+    const escapedText = escapeText(text);
+    // Preserve significant whitespace without changing its Unicode characters.
+    if (/^ | $| {2}|\t|\u00a0/.test(text)) {
+      return `<span style="white-space: pre-wrap;">${escapedText}</span>`;
+    }
+    return escapedText;
   }
   if (blot instanceof ParentBlot) {
     // TODO fix API

@@ -1,7 +1,19 @@
 import { defineConfig } from 'vitest/config';
 import { resolve } from 'path';
+import { readFileSync } from 'node:fs';
 
 export default defineConfig({
+  plugins: [
+    {
+      name: 'quill-inline-svg',
+      enforce: 'pre',
+      load(id) {
+        if (id.endsWith('.svg')) {
+          return `export default ${JSON.stringify(readFileSync(id, 'utf8'))};`;
+        }
+      },
+    },
+  ],
   resolve: {
     extensions: ['.ts', '.js'],
   },

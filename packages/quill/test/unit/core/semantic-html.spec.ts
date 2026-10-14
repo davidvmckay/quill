@@ -3,12 +3,25 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import Quill from '../../../src/core.js';
 import Formula from '../../../src/formats/formula.js';
 import Video from '../../../src/formats/video.js';
+import Bold from '../../../src/formats/bold.js';
+import Italic from '../../../src/formats/italic.js';
+import Link from '../../../src/formats/link.js';
+import Indent from '../../../src/formats/indent.js';
+import Image from '../../../src/formats/image.js';
 import { createRegistry } from '../__helpers__/factory.js';
 
 const createQuill = () => {
   const container = document.body.appendChild(document.createElement('div'));
   return new Quill(container, {
-    registry: createRegistry([Formula, Video]),
+    registry: createRegistry([
+      Formula,
+      Video,
+      Bold,
+      Italic,
+      Link,
+      Indent,
+      Image,
+    ]),
   });
 };
 
@@ -95,5 +108,73 @@ describe.each([
       expect(video.getAttribute('href')).toBe('about:blank');
       expect(video.textContent).toBe('about:blank');
     });
+  });
+});
+
+describe('HTML export fidelity', () => {
+  test('ordinary spaces stay breakable', () => {
+    const quill = createQuill();
+    quill.setText('a text with normal spaces');
+    expect(quill.getSemanticHTML()).toBe('<p>a text with normal spaces</p>');
+    expect(quill.getSemanticHTML(2, 4)).toBe('text');
+  });
+
+  test.each([
+    'one   two',
+    '  leading and trailing  ',
+    '\tTabbed\ttext',
+    'a\u00a0b',
+    'a < b & c > d',
+  ])('round-trips whitespace in %s', (text) => {
+    const quill = createQuill();
+    quill.setText(text);
+    const html = quill.getSemanticHTML();
+    const parsed = document.createElement('template');
+    parsed.innerHTML = html;
+    expect(parsed.content.textContent).toBe(text);
+    const copy = createQuill();
+    copy.setContents(copy.clipboard.convert({ html }));
+    expect(copy.getContents()).toEqual(quill.getContents());
+  });
+
+  test('round-trips whitespace across formatting boundaries', () => {
+    const quill = createQuill();
+    quill.setContents(
+      new Delta()
+        .insert('bold ', { bold: true })
+        .insert(' italic', { italic: true })
+        .insert('\n'),
+    );
+    const copy = createQuill();
+    copy.setContents(copy.clipboard.convert({ html: quill.getSemanticHTML() }));
+    expect(copy.getContents()).toEqual(quill.getContents());
+  });
+
+  test('round-trips nested lists and escaped link URLs', () => {
+    const quill = createQuill();
+    quill.setContents(
+      new Delta()
+        .insert('Parent', { link: 'https://example.com/?a=1&b=2' })
+        .insert('\n', { list: 'ordered' })
+        .insert('  Nested item', { bold: true })
+        .insert('\n', { list: 'bullet', indent: 1 }),
+    );
+    const html = quill.getSemanticHTML();
+    const copy = createQuill();
+    copy.setContents(copy.clipboard.convert({ html }));
+    expect(copy.getContents()).toEqual(quill.getContents());
+  });
+
+  test('round-trips image embeds', () => {
+    const quill = createQuill();
+    quill.setContents(
+      new Delta()
+        .insert('image ')
+        .insert({ image: 'https://example.com/image.png?a=1&b=2' })
+        .insert('\n'),
+    );
+    const copy = createQuill();
+    copy.setContents(copy.clipboard.convert({ html: quill.getSemanticHTML() }));
+    expect(copy.getContents()).toEqual(quill.getContents());
   });
 });

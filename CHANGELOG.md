@@ -1,5 +1,14 @@
 # Unreleased
 
+## Internal maintenance
+
+- Replace the library's Webpack/Babel build and development server with Bun.
+- Use a Bun lockfile and local verification commands; remove inherited GitHub CI and public release automation.
+- Preserve ordinary spaces in HTML exports and significant whitespace with `white-space: pre-wrap`, including clipboard round trips.
+- Give toolbar pickers accessible names, listbox/option roles, selected state, arrow-key navigation, typeahead, and visible keyboard focus.
+- Add `modules.keyboard.tabBehavior: 'navigate'` for native Tab/Shift+Tab focus traversal. The default remains `'indent'`.
+- Add built-distribution security checks and automated toolbar accessibility checks.
+
 ## Security
 
 - Fix CVE-2025-15056 by escaping formula and video values in HTML exports.

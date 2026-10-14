@@ -368,8 +368,12 @@ const preNodes = new WeakMap();
 function isPre(node: Node | null) {
   if (node == null) return false;
   if (!preNodes.has(node)) {
-    // @ts-expect-error
-    if (node.tagName === 'PRE') {
+    if (node instanceof HTMLElement && node.style.whiteSpace) {
+      preNodes.set(
+        node,
+        ['pre', 'pre-wrap', 'break-spaces'].includes(node.style.whiteSpace),
+      );
+    } else if (node instanceof Element && node.tagName === 'PRE') {
       preNodes.set(node, true);
     } else {
       preNodes.set(node, isPre(node.parentNode));

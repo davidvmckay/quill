@@ -168,6 +168,9 @@ colorItemsPerRow = 7
     padding-right: 2px
     position: relative
     width: 100%
+    &:focus-visible
+      outline: 2px solid activeColor
+      outline-offset: 2px
     &::before
       display: inline-block
       line-height: 22px
@@ -183,6 +186,9 @@ colorItemsPerRow = 7
       display: block
       padding-bottom: 5px
       padding-top: 5px
+      &:focus-visible
+        outline: 2px solid activeColor
+        outline-offset: -2px
   .ql-picker.ql-expanded
     .ql-picker-label
       color: borderColor

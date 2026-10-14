@@ -12,13 +12,12 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 1 : 2,
   reporter: 'list',
   use: {
     actionTimeout: 0,
     trace: 'on-first-retry',
-    baseURL: `https://127.0.0.1:${port}`,
-    ignoreHTTPSErrors: true,
+    baseURL: `http://127.0.0.1:${port}`,
   },
   projects: [
     {
@@ -34,9 +33,8 @@ export default defineConfig({
     { name: 'Safari', use: { ...devices['Desktop Safari'] } },
   ],
   webServer: {
-    command: `npx webpack serve --config test/e2e/__dev_server__/webpack.config.cjs --env port=${port}`,
+    command: `bun scripts/serve.ts --test --port ${port}`,
     port,
-    ignoreHTTPSErrors: true,
     reuseExistingServer: !process.env.CI,
     stdout: 'ignore',
     stderr: 'pipe',

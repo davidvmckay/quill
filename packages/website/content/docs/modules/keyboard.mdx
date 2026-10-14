@@ -4,6 +4,21 @@ title: Keyboard Module
 
 The Keyboard module enables custom behavior for keyboard events in particular contexts. Quill uses this to bind formatting hotkeys and prevent undesirable browser side effects.
 
+For form editors that should participate in normal keyboard focus navigation, set
+`tabBehavior: 'navigate'`. Tab and Shift+Tab then use the browser's native focus
+traversal and leave the editor contents unchanged:
+
+```javascript
+const quill = new Quill('#editor', {
+  modules: {
+    keyboard: { tabBehavior: 'navigate' },
+  },
+});
+```
+
+The default, `'indent'`, preserves Quill's existing Tab bindings. In `'navigate'`
+mode, all Tab bindings are bypassed, including custom Tab bindings.
+
 
 ### Key Bindings
 

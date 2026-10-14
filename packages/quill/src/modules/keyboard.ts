@@ -51,10 +51,7 @@ interface NormalizedBinding extends Omit<BindingObject, 'key' | 'shortKey'> {
 
 interface KeyboardOptions {
   bindings: Record<string, Binding>;
-}
-
-interface KeyboardOptions {
-  bindings: Record<string, Binding>;
+  tabBehavior: 'indent' | 'navigate';
 }
 
 class Keyboard extends Module<KeyboardOptions> {
@@ -173,6 +170,7 @@ class Keyboard extends Module<KeyboardOptions> {
   listen() {
     this.quill.root.addEventListener('keydown', (evt) => {
       if (evt.defaultPrevented || evt.isComposing) return;
+      if (evt.key === 'Tab' && this.options.tabBehavior === 'navigate') return;
 
       // evt.isComposing is false when pressing Enter/Backspace when composing in Safari
       // https://bugs.webkit.org/show_bug.cgi?id=165004
@@ -355,6 +353,7 @@ class Keyboard extends Module<KeyboardOptions> {
 }
 
 const defaultOptions: KeyboardOptions = {
+  tabBehavior: 'indent',
   bindings: {
     bold: makeFormatHandler('bold'),
     italic: makeFormatHandler('italic'),
