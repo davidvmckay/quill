@@ -1,6 +1,6 @@
 import { watch } from 'node:fs';
 import { join } from 'node:path';
-import { buildLibrary, distRoot, packageRoot, sourceRoot } from './build.ts';
+import { buildLibrary, distRoot, packageRoot, sourceRoot, svgPlugin } from './build.ts';
 
 const portIndex = Bun.argv.indexOf('--port');
 const port = Number(portIndex >= 0 ? Bun.argv[portIndex + 1] : 9080);
@@ -12,11 +12,12 @@ await buildLibrary({ minify: production, declarations: production });
 
 const fixtures = join(packageRoot, 'test/e2e/__dev_server__');
 const result = await Bun.build({
-  entrypoints: [join(fixtures, 'highlight.ts'), join(fixtures, 'modules.ts')],
+  entrypoints: [join(fixtures, 'highlight.ts'), join(fixtures, 'modules.ts'), join(fixtures, 'geometry.ts')],
   target: 'browser',
   format: 'iife',
   naming: '[name].js',
   outdir: join(packageRoot, '.bun', 'fixtures'),
+  plugins: [svgPlugin],
   files: {
     [join(fixtures, 'highlight.ts')]:
       'import hljs from "highlight.js"; window.hljs = hljs;',
@@ -39,7 +40,8 @@ const server = Bun.serve({
     if (!/^\/[\w.-]+\.(js|css|map)$/.test(pathname)) {
       return new Response('Not found', { status: 404 });
     }
-    const fixture = pathname === '/highlight.js' || pathname === '/modules.js';
+    if (pathname === '/axe.js') return new Response(Bun.file(Bun.resolveSync('axe-core/axe.min.js', packageRoot)));
+    const fixture = ['/highlight.js', '/modules.js', '/geometry.js'].includes(pathname);
     const file = Bun.file(
       join(
         fixture
@@ -58,7 +60,7 @@ console.log(`Quill development server: ${server.url}`);
 if (Bun.argv.includes('--watch')) {
   let rebuildTimer: ReturnType<typeof setTimeout>;
   let rebuilding = Promise.resolve();
-  watch(sourceRoot, { recursive: true }, () => {
+  const onSourceChange = () => {
     clearTimeout(rebuildTimer);
     rebuildTimer = setTimeout(() => {
       rebuilding = rebuilding.then(async () => {
@@ -69,5 +71,8 @@ if (Bun.argv.includes('--watch')) {
         }
       });
     }, 150);
-  });
+  };
+  for (const directory of [sourceRoot, join(packageRoot, '../quill-delta/src')]) {
+    watch(directory, { recursive: true }, onSourceChange);
+  }
 }

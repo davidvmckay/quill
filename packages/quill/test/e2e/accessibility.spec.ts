@@ -1,5 +1,6 @@
-import AxeBuilder from '@axe-core/playwright';
-import { expect } from '@playwright/test';
+import { expectElement } from '../browser/assert.js';
+
+import { expect } from 'bun:test';
 import { test } from './fixtures/index.js';
 
 test('toolbar pickers support keyboard selection and escape', async ({
@@ -15,11 +16,11 @@ test('toolbar pickers support keyboard selection and escape', async ({
   });
   await trigger.focus();
   await trigger.press('ArrowDown');
-  await expect(
+  await expectElement(
     page.getByRole('option', { name: 'Default font', exact: true }),
   ).toBeFocused();
   await page.keyboard.press('ArrowDown');
-  await expect(
+  await expectElement(
     page.getByRole('option', { name: 'serif', exact: true }),
   ).toBeFocused();
   await page.keyboard.press('Enter');
@@ -27,22 +28,22 @@ test('toolbar pickers support keyboard selection and escape', async ({
     name: 'font: serif',
     exact: true,
   });
-  await expect(selected).toBeFocused();
-  await expect(page.locator('select.ql-font')).toHaveValue('serif');
+  await expectElement(selected).toBeFocused();
+  await expectElement(page.locator('select.ql-font')).toHaveValue('serif');
   const format = await page.evaluate(() => {
     // @ts-expect-error Verify that keyboard selection actually formats text.
     return window.quill.getFormat(0, 16).font;
   });
   expect(format).toBe('serif');
   await selected.press(' ');
-  await expect(
+  await expectElement(
     page.getByRole('option', { name: 'serif', exact: true }),
   ).toBeFocused();
   await page.keyboard.press('Escape');
-  await expect(selected).toBeFocused();
-  await expect(selected).toHaveAttribute('aria-expanded', 'false');
+  await expectElement(selected).toBeFocused();
+  await expectElement(selected).toHaveAttribute('aria-expanded', 'false');
   await selected.press('Tab');
-  await expect(
+  await expectElement(
     page.getByRole('button', { name: 'size: Normal', exact: true }),
   ).toBeFocused();
 });
@@ -55,21 +56,15 @@ test('toolbar exposes valid accessible names and selection roles', async ({
   await page
     .getByRole('button', { name: 'font: Default font', exact: true })
     .press('ArrowDown');
-  const result = await new AxeBuilder({ page })
-    .include('.ql-toolbar')
-    .withRules([
-      'button-name',
-      'aria-command-name',
-      'aria-input-field-name',
-      'aria-required-attr',
-      'aria-required-children',
-      'aria-required-parent',
-      'aria-valid-attr-value',
-      'aria-prohibited-attr',
-      'aria-valid-attr',
-      'aria-hidden-focus',
-    ])
-    .analyze();
+  await page.addScriptTag({ url: '/axe.js' });
+  const result = await page.evaluate(async () => {
+    // @ts-expect-error Loaded by the local accessibility fixture.
+    return window.axe.run(document.querySelector('.ql-toolbar'), { runOnly: { type: 'rule', values: [
+      'button-name', 'aria-command-name', 'aria-input-field-name', 'aria-required-attr',
+      'aria-required-children', 'aria-required-parent', 'aria-valid-attr-value',
+      'aria-prohibited-attr', 'aria-valid-attr', 'aria-hidden-focus',
+    ] } });
+  });
   expect(result.violations).toEqual([]);
 });
 
@@ -93,11 +88,11 @@ test('navigate mode lets Tab and Shift+Tab leave the editor', async ({
   });
   const contents = await editorPage.getContents();
   await editorPage.root.press('Tab');
-  await expect(
+  await expectElement(
     page.getByRole('button', { name: 'After editor', exact: true }),
   ).toBeFocused();
   await editorPage.root.press('Shift+Tab');
-  await expect(
+  await expectElement(
     page.getByRole('button', { name: 'Before editor', exact: true }),
   ).toBeFocused();
   expect(await editorPage.getContents()).toEqual(contents);

@@ -5,7 +5,7 @@ import {
 } from '../__helpers__/factory.js';
 import Editor from '../../../src/core/editor.js';
 import Link from '../../../src/formats/link.js';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import { SizeClass } from '../../../src/formats/size.js';
 
 const createScroll = (html: string) =>
@@ -28,7 +28,7 @@ describe('Link', () => {
 
   test('add invalid', () => {
     const editor = new Editor(createScroll('<p>0123</p>'));
-    editor.formatText(1, 2, { link: 'javascript:alert(0);' }); // eslint-disable-line no-script-url
+    editor.formatText(1, 2, { link: 'javascript:alert(0);' });
     expect(editor.getDelta()).toEqual(
       new Delta()
         .insert('0')

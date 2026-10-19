@@ -11,9 +11,16 @@ async function run(script: string, env: Record<string, string> = {}) {
 }
 
 await run('build');
-await run('lint');
-for (const browser of ['chromium', 'firefox', 'webkit']) {
-  await run('test:unit', { BROWSER: browser });
-}
+await run('typecheck');
+const deltaCheck = Bun.spawn([process.execPath, 'check'], {
+  cwd: `${packageRoot}/../quill-delta`,
+  stdout: 'inherit',
+  stderr: 'inherit',
+});
+if (await deltaCheck.exited) throw new Error('Delta typecheck failed');
+await run('test:unit');
 await run('test:fuzz');
-await run('test:e2e');
+for (const browser of ['chromium', 'firefox', 'webkit']) {
+  if (browser === 'webkit' && process.platform !== 'darwin') continue;
+  await run('test:e2e', { BROWSER: browser });
+}

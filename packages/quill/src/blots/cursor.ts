@@ -37,7 +37,6 @@ class Cursor extends EmbedBlot {
       return;
     }
     // TODO: Fix this next time the file is edited.
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
     let target: Parent | this = this;
     let index = 0;
     while (target != null && target.statics.scope !== Scope.BLOCK_BLOT) {

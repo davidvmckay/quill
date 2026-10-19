@@ -302,7 +302,7 @@ function deltaEndsWith(delta: Delta, text: string) {
   for (
     let i = delta.ops.length - 1;
     i >= 0 && endText.length < text.length;
-    --i // eslint-disable-line no-plusplus
+    --i
   ) {
     const op = delta.ops[i];
     if (typeof op.insert !== 'string') break;

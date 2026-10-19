@@ -5,7 +5,7 @@ import { AlignClass } from '../../src/formats/align.js';
 import { FontClass } from '../../src/formats/font.js';
 import { SizeClass } from '../../src/formats/size.js';
 import Quill from '../../src/quill.js';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 type AttributeDef = { name: string; values: (number | string | boolean)[] };
 const BLOCK_EMBED_NAME = 'video';

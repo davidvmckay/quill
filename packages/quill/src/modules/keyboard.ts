@@ -1,4 +1,4 @@
-import { cloneDeep, isEqual } from 'lodash-es';
+import { cloneDeep, isEqual } from '../utils/object.js';
 import Delta, { AttributeMap } from 'quill-delta';
 import { EmbedBlot, Scope, TextBlot } from 'parchment';
 import type { Blot, BlockBlot } from 'parchment';
@@ -38,7 +38,6 @@ interface BindingObject
     this: { quill: Quill },
     range: Range,
     curContext: Context,
-    // eslint-disable-next-line no-use-before-define
     binding: NormalizedBinding,
   ) => boolean | void;
 }
@@ -663,8 +662,7 @@ function makeCodeBlockHandler(indent: boolean): BindingObject {
           } else {
             length += TAB.length;
           }
-          // @ts-expect-error Fix me later
-        } else if (line.domNode.textContent.startsWith(TAB)) {
+        } else if (line.domNode.textContent?.startsWith(TAB)) {
           line.deleteAt(0, TAB.length);
           if (i === 0) {
             index -= TAB.length;

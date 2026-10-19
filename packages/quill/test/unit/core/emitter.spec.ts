@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import Emitter from '../../../src/core/emitter.js';
 import Quill from '../../../src/core.js';
 

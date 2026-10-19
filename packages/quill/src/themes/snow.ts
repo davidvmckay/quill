@@ -1,4 +1,4 @@
-import { merge } from 'lodash-es';
+import { merge } from '../utils/object.js';
 import Emitter from '../core/emitter.js';
 import BaseTheme, { BaseTooltip } from './base.js';
 import LinkBlot from '../formats/link.js';

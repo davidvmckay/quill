@@ -5,7 +5,7 @@ let level: DebugLevel | false = 'warn';
 function debug(method: DebugLevel, ...args: unknown[]) {
   if (level) {
     if (levels.indexOf(method) <= levels.indexOf(level)) {
-      console[method](...args); // eslint-disable-line no-console
+      console[method](...args);
     }
   }
 }

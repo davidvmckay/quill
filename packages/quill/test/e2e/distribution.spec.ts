@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+import { expect } from 'bun:test';
 import { test } from './fixtures/index.js';
 import pkg from '../../package.json';
 

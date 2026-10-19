@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+import { expect } from 'bun:test';
 import { test } from './fixtures/index.js';
 
 test.describe('replace selection', () => {
@@ -37,7 +37,7 @@ test.describe('replace selection', () => {
       expect(await editorPage.getContents()).toEqual([{ insert: '1\n\n' }]);
     });
 
-    test('with IME', async ({ editorPage, composition }) => {
+    test.ime('with IME', async ({ editorPage, composition }) => {
       await editorPage.setContents([
         { insert: '1' },
         { insert: '2', attributes: { color: 'red' } },

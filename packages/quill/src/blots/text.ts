@@ -2,7 +2,7 @@ import { TextBlot } from 'parchment';
 
 class Text extends TextBlot {}
 
-// https://lodash.com/docs#escape
+// Escape text and attribute values for HTML serialization.
 const entityMap: Record<string, string> = {
   '&': '&amp;',
   '<': '&lt;',

@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import normalize from '../../../../../src/modules/normalizeExternalHTML/normalizers/msWord.js';
 
 describe('Microsoft Word', () => {
@@ -21,40 +21,6 @@ describe('Microsoft Word', () => {
 
     const doc = new DOMParser().parseFromString(html, 'text/html');
     normalize(doc);
-    expect(doc.body.children).toMatchInlineSnapshot(`
-      HTMLCollection [
-        <ul>
-          <li
-            data-list="ordered"
-          >
-            item 1
-          </li>
-          <li
-            class="ql-indent-2"
-            data-list="bullet"
-          >
-            item 2
-          </li>
-        </ul>,
-        <ul>
-          <li
-            class="ql-indent-3"
-            data-list="ordered"
-          >
-            item 3 in another list
-          </li>
-        </ul>,
-        <p>
-          Plain paragraph
-        </p>,
-        <ul>
-          <li
-            data-list="ordered"
-          >
-            the last item
-          </li>
-        </ul>,
-      ]
-    `);
+    expect(doc.body).toEqualHTML('<ul><li data-list="ordered">item 1</li><li class="ql-indent-2" data-list="bullet">item 2</li></ul><ul><li class="ql-indent-3" data-list="ordered">item 3 in another list</li></ul><p>Plain paragraph</p><ul><li data-list="ordered">the last item</li></ul>');
   });
 });

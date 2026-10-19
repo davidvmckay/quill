@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import Picker from '../../../src/ui/picker.js';
 
 describe('Picker', () => {
@@ -182,7 +182,7 @@ describe('Picker', () => {
       .querySelector('.ql-picker-label')
       ?.getAttribute('aria-controls');
     expect(pickerSelector.querySelector('.ql-picker-options')?.id).toEqual(
-      ariaControlsLabel,
+      ariaControlsLabel!,
     );
     expect(
       (pickerSelector.querySelector('.ql-picker-options') as HTMLSelectElement)

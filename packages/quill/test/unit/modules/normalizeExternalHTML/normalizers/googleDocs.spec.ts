@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import normalize from '../../../../../src/modules/normalizeExternalHTML/normalizers/googleDocs.js';
 
 describe('Google Docs', () => {
@@ -17,20 +17,6 @@ describe('Google Docs', () => {
 
     const doc = new DOMParser().parseFromString(html, 'text/html');
     normalize(doc);
-    expect(doc.body.children).toMatchInlineSnapshot(`
-      HTMLCollection [
-        <span>
-          Item 1
-        </span>,
-        <b>
-          Item 2
-        </b>,
-        <b
-          style="font-weight: bold;"
-        >
-          Item 3
-        </b>,
-      ]
-    `);
+    expect(doc.body).toEqualHTML('<span>Item 1</span><b>Item 2</b><b style="font-weight: bold;">Item 3</b>');
   });
 });

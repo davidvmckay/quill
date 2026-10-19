@@ -6,7 +6,7 @@ import {
 import Editor from '../../../src/core/editor.js';
 import List, { ListContainer } from '../../../src/formats/list.js';
 import IndentClass from '../../../src/formats/indent.js';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 const createScroll = (html: string) =>
   baseCreateScroll(html, createRegistry([ListContainer, List, IndentClass]));

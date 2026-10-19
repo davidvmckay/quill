@@ -1,6 +1,6 @@
 import Delta from 'quill-delta';
 import Quill from '../../../src/core.js';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import { createRegistry } from '../__helpers__/factory.js';
 import {
   TableBody,

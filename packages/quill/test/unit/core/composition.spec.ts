@@ -1,7 +1,7 @@
 import Emitter from '../../../src/core/emitter.js';
 import Composition from '../../../src/core/composition.js';
 import Scroll from '../../../src/blots/scroll.js';
-import { describe, expect, test, vitest } from 'vitest';
+import { describe, expect, test, vi } from 'bun:test';
 import { createRegistry } from '../__helpers__/factory.js';
 import Quill from '../../../src/core.js';
 
@@ -13,7 +13,7 @@ describe('Composition', () => {
     });
     new Composition(scroll, emitter);
 
-    vitest.spyOn(emitter, 'emit');
+    vi.spyOn(emitter, 'emit');
 
     const event = new CompositionEvent('compositionstart');
     scroll.domNode.dispatchEvent(event);

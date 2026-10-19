@@ -7,7 +7,7 @@ import { Registry } from 'parchment';
 import Text from '../../../src/blots/text.js';
 import Emitter from '../../../src/core/emitter.js';
 import Break from '../../../src/blots/break.js';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import { createRegistry } from '../__helpers__/factory.js';
 import List, { ListContainer } from '../../../src/formats/list.js';
 import Bold from '../../../src/formats/bold.js';

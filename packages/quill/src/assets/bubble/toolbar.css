@@ -1,0 +1,13 @@
+.ql-bubble .ql-toolbar .ql-formats {
+  margin: 8px 12px 8px 0px;
+}
+.ql-bubble .ql-toolbar .ql-formats:first-child {
+  margin-left: 12px;
+}
+.ql-bubble .ql-color-picker svg {
+  margin: 1px;
+}
+.ql-bubble .ql-color-picker .ql-picker-item.ql-selected,
+.ql-bubble .ql-color-picker .ql-picker-item:hover {
+  border-color: #fff;
+}

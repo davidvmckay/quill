@@ -1,0 +1,3 @@
+[test]
+root = './packages/quill/test/unit'
+preload = ['./packages/quill/test/setup.ts']

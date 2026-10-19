@@ -133,7 +133,7 @@ class Toolbar extends Module<ToolbarProps> {
         // @ts-expect-error
         this.quill.scroll.query(format).prototype instanceof EmbedBlot
       ) {
-        value = prompt(`Enter ${format}`); // eslint-disable-line no-alert
+        value = prompt(`Enter ${format}`);
         if (!value) return;
         this.quill.updateContents(
           new Delta()
@@ -307,7 +307,7 @@ Toolbar.DEFAULTS = {
     },
     link(value) {
       if (value === true) {
-        value = prompt('Enter link URL:'); // eslint-disable-line no-alert
+        value = prompt('Enter link URL:');
       }
       this.quill.format('link', value, Quill.sources.USER);
     },

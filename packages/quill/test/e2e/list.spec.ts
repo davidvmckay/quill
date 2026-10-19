@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+import { expect } from 'bun:test';
 import { test } from './fixtures/index.js';
 import { isMac, sleep } from './utils/index.js';
 
@@ -109,7 +109,7 @@ test.describe('list', () => {
       });
 
       // https://github.com/slab/quill/issues/3837
-      test('typing at beginning with IME', async ({
+      test.ime('typing at beginning with IME', async ({
         editorPage,
         composition,
       }) => {
@@ -130,7 +130,7 @@ test.describe('list', () => {
         ]);
       });
 
-      test('typing in an empty editor with IME and press Backspace', async ({
+      test.ime('typing in an empty editor with IME and press Backspace', async ({
         page,
         editorPage,
         composition,

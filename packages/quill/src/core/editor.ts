@@ -1,4 +1,4 @@
-import { cloneDeep, isEqual, merge } from 'lodash-es';
+import { cloneDeep, isEqual, merge } from '../utils/object.js';
 import { LeafBlot, EmbedBlot, Scope, ParentBlot } from 'parchment';
 import type { Blot } from 'parchment';
 import Delta, { AttributeMap, Op } from 'quill-delta';

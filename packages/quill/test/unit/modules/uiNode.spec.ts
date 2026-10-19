@@ -1,11 +1,10 @@
 import '../../../src/quill.js';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import UINode, {
   TTL_FOR_VALID_SELECTION_CHANGE,
 } from '../../../src/modules/uiNode.js';
 import Quill, { Delta } from '../../../src/core.js';
 
-// Fake timer is not supported in browser mode yet.
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 describe('uiNode', () => {
@@ -35,6 +34,7 @@ describe('uiNode', () => {
     selection?.removeAllRanges();
     selection?.addRange(range);
 
+    document.dispatchEvent(new Event('selectionchange'));
     await delay(TTL_FOR_VALID_SELECTION_CHANGE / 2);
     expect(selection?.getRangeAt(0).startOffset).toEqual(1);
   });

@@ -1,5 +1,5 @@
 import Delta from 'quill-delta';
-import { describe, expect, test, vitest } from 'vitest';
+import { describe, expect, test, vi } from 'bun:test';
 import Quill from '../../../src/core.js';
 import { Range } from '../../../src/core/selection.js';
 import Bold from '../../../src/formats/bold.js';
@@ -110,7 +110,7 @@ describe('Clipboard', () => {
       // Copying from Word includes both html and files
       test('pastes html data if present with file', async () => {
         const quill = createQuill();
-        const upload = vitest.spyOn(quill.uploader, 'upload');
+        const upload = vi.spyOn(quill.uploader, 'upload');
         quill.clipboard.onCapturePaste({
           ...clipboardEvent,
           clipboardData: {
@@ -128,7 +128,7 @@ describe('Clipboard', () => {
 
       test('pastes image file if present with image only html', async () => {
         const quill = createQuill();
-        const upload = vitest.spyOn(quill.uploader, 'upload');
+        const upload = vi.spyOn(quill.uploader, 'upload');
         quill.clipboard.onCapturePaste({
           ...clipboardEvent,
           clipboardData: {
@@ -145,7 +145,7 @@ describe('Clipboard', () => {
 
       test('does not fire selection-change', async () => {
         const quill = createQuill();
-        const change = vitest.fn();
+        const change = vi.fn();
         quill.on('selection-change', change);
         quill.clipboard.onCapturePaste(clipboardEvent);
         expect(change).not.toHaveBeenCalled();
@@ -547,7 +547,6 @@ describe('Clipboard', () => {
         const regex = /https?:\/\/[^\s]+/g;
         let match: RegExpExecArray | null = null;
         const composer = new Delta();
-        // eslint-disable-next-line no-cond-assign
         while ((match = regex.exec((node as Text).data))) {
           composer.retain(match.index - index);
           index = regex.lastIndex;
@@ -567,7 +566,7 @@ describe('Clipboard', () => {
 
     test('does not execute javascript', () => {
       // @ts-expect-error
-      window.unsafeFunction = vitest.fn();
+      window.unsafeFunction = vi.fn();
       const html =
         "<img src='/assets/favicon.png' onload='window.unsafeFunction()'/>";
       createClipboard().convert({ html });

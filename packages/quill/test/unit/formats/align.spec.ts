@@ -1,6 +1,6 @@
 import Delta from 'quill-delta';
 import Editor from '../../../src/core/editor.js';
-import { describe, test, expect } from 'vitest';
+import { describe, test, expect } from 'bun:test';
 import {
   createRegistry,
   createScroll as baseCreateScroll,

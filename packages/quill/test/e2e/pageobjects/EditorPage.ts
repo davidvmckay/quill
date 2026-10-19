@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { Page } from '../../browser/page.js';
 import type Composition from '../fixtures/Composition.js';
 
 interface Op {
@@ -38,6 +38,8 @@ const getTextNodeDef = [
 const updateSelectionDef = [
   'range',
   `
+  // WKWebView does not focus contenteditable when a DOM range is selected.
+  range.startContainer.parentElement?.closest('[contenteditable="true"]')?.focus({ preventScroll: true });
   return new Promise((resolve) => {
     document.addEventListener('selectionchange', () => {
       setTimeout(() => {

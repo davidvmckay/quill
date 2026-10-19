@@ -1,9 +1,4 @@
 {
-  "ts-node": {
-    "compilerOptions": {
-      "esModuleInterop": true
-    }
-  },
   "compilerOptions": {
     "outDir": "./dist",
     "allowSyntheticDefaultImports": true,
@@ -11,11 +6,26 @@
     "sourceMap": true,
     "resolveJsonModule": true,
     "declaration": false,
-    "module": "ES2020",
+    "module": "ESNext",
     "moduleResolution": "bundler",
     "strictNullChecks": true,
     "noImplicitAny": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "types": [
+      "bun",
+      "highlight.js"
+    ],
+    "skipLibCheck": true,
+    "strict": false,
+    "paths": {
+      "quill-delta": [
+        "../quill-delta/src/Delta.ts"
+      ]
+    },
+    "rootDir": ".."
   },
-  "include": ["src/**/*", "test/**/*"]
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ]
 }

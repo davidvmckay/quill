@@ -3,6 +3,11 @@
 ## Internal maintenance
 
 - Replace the library's Webpack/Babel build and development server with Bun.
+- Remove ESLint, Prettier, and Vitest; use `bun check` for typechecking and `bun test` for units, fuzzing, and browser checks. TypeScript remains only for declaration emission.
+- Drive Chrome and macOS WebKit through Bun.WebView, retaining Playwright as the Firefox driver. Preserve real-browser geometry, keyboard, clipboard, and accessibility coverage.
+- Replace Lodash calls with focused shared utilities adapted from m-dash, and adapt Delta into a local workspace package to remove its Lodash dependencies.
+- Separate the optional documentation site's installation from the library dependency graph.
+- Replace Stylus sources with plain CSS and bundle the core, Snow, and Bubble stylesheets with Bun.
 - Use a Bun lockfile and local verification commands; remove inherited GitHub CI and public release automation.
 - Preserve ordinary spaces in HTML exports and significant whitespace with `white-space: pre-wrap`, including clipboard round trips.
 - Give toolbar pickers accessible names, listbox/option roles, selected state, arrow-key navigation, typeahead, and visible keyboard focus.
@@ -13,7 +18,7 @@
 
 - Fix CVE-2025-15056 by escaping formula and video values in HTML exports.
 - Escape syntax code block language attributes in HTML exports.
-- Require lodash-es 4.18.1 or later to address CVE-2026-4800.
+- Eliminate Lodash dependencies from the editor and internal Delta runtime, including the previously patched lodash-es dependency.
 
 # v2.0.2 (2024-05-13)
 

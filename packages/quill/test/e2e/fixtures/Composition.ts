@@ -1,8 +1,5 @@
-import type {
-  CDPSession,
-  Page,
-  PlaywrightWorkerOptions,
-} from '@playwright/test';
+import type { Page, BrowserName } from '../../browser/page.js';
+type CDPSession = { send(method: string, params?: Record<string, unknown>): Promise<unknown> };
 
 abstract class CompositionSession {
   abstract update(key: string): Promise<void>;
@@ -56,7 +53,7 @@ class ChromiumCompositionSession extends CompositionSession {
 class Composition {
   constructor(
     private page: Page,
-    private browserName: PlaywrightWorkerOptions['browserName'],
+    private browserName: BrowserName,
   ) {}
 
   async start() {

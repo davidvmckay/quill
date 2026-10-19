@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import Quill from '../../../../src/core.js';
 import Video from '../../../../src/formats/video.js';
 import { BaseTooltip } from '../../../../src/themes/base.js';

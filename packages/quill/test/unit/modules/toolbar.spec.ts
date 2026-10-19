@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import Quill from '../../../src/core/quill.js';
 import Toolbar, { addControls } from '../../../src/modules/toolbar.js';
 import { normalizeHTML } from '../__helpers__/utils.js';

@@ -1,5 +1,5 @@
 import Delta from 'quill-delta';
-import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test } from 'bun:test';
 import Quill from '../../../src/core.js';
 import Formula from '../../../src/formats/formula.js';
 import Video from '../../../src/formats/video.js';
@@ -32,15 +32,17 @@ describe.each([
 ] as const)('HTML export (%s)', (_name, exportHTML) => {
   describe('formula', () => {
     beforeEach(() => {
-      vi.stubGlobal('katex', {
+      // @ts-expect-error The optional KaTeX renderer is supplied by the caller.
+      window.katex = {
         render(value: string, node: Element) {
           node.textContent = value;
         },
-      });
+      };
     });
 
     afterEach(() => {
-      vi.unstubAllGlobals();
+      // @ts-expect-error Remove the renderer stub after each formula case.
+      delete window.katex;
     });
 
     test.each([

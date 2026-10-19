@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { Page } from '../../browser/page.js';
 import { SHORTKEY } from '../utils/index.js';
 
 class Clipboard {
@@ -17,10 +17,14 @@ class Clipboard {
   }
 
   async writeText(value: string) {
-    // Playwright + Safari + Linux doesn't support async clipboard API
-    // https://github.com/microsoft/playwright/issues/18901
+    // Some browser backends lack the async clipboard API.
     const hasFallbackWritten = await this.page.evaluate((value) => {
       if (navigator.clipboard) return false;
+      const activeElement = document.activeElement as HTMLElement | null;
+      const selection = document.getSelection();
+      const ranges = Array.from({ length: selection?.rangeCount ?? 0 }, (_, index) =>
+        selection!.getRangeAt(index).cloneRange(),
+      );
       const textArea = document.createElement('textarea');
       textArea.value = value;
 
@@ -34,6 +38,9 @@ class Clipboard {
 
       const isSupported = document.execCommand('copy');
       textArea.remove();
+      activeElement?.focus({ preventScroll: true });
+      selection?.removeAllRanges();
+      ranges.forEach((range) => selection?.addRange(range));
       return isSupported;
     }, value);
 

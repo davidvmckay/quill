@@ -15,15 +15,20 @@ bun run build
 
 The distribution is in `packages/quill/dist/`. It includes JavaScript modules,
 TypeScript declarations, standalone full/core browser bundles, and core/Snow/
-Bubble CSS. Use the built directory through your internal distribution mechanism.
+Bubble CSS. The internal Delta dependency is built in `packages/quill-delta/dist/`;
+distribute both directories through your internal package mechanism.
 
 ## Develop and verify
 
 ```sh
-bunx --bun playwright install chromium firefox webkit
+bunx --bun playwright install firefox
 bun start
 bun run verify
 ```
+
+Chrome/Chromium supplies Bun.WebView's browser backend; macOS also supplies
+native WebKit. Firefox uses Playwright as its driver. All tests use `bun test`,
+and `bun run typecheck` uses Bun's built-in checker.
 
 The development editor runs at `http://127.0.0.1:9080`. See
 [development instructions](.github/DEVELOPMENT.md) for targeted tests, security

@@ -1,4 +1,4 @@
-import { expect } from '@playwright/test';
+import { expect } from 'bun:test';
 import { getSelectionInTextNode, SHORTKEY } from './utils/index.js';
 import { test, CHAPTER, P1, P2 } from './fixtures/index.js';
 

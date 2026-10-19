@@ -1,4 +1,4 @@
-import { describe, expect, test, vitest } from 'vitest';
+import { describe, expect, test, vi } from 'bun:test';
 import Emitter from '../../../src/core/emitter.js';
 import Selection, { Range } from '../../../src/core/selection.js';
 import Cursor from '../../../src/blots/cursor.js';
@@ -25,7 +25,7 @@ describe('Scroll', () => {
 
   test('api change', () => {
     const scroll = createScroll('<p>Hello World!</p>');
-    vitest.spyOn(scroll.emitter, 'emit');
+    vi.spyOn(scroll.emitter, 'emit');
     scroll.insertAt(5, '!');
     expect(scroll.emitter.emit).toHaveBeenCalledWith(
       Emitter.events.SCROLL_OPTIMIZE,
@@ -36,7 +36,7 @@ describe('Scroll', () => {
 
   test('user change', async () => {
     const scroll = createScroll('<p>Hello World!</p>');
-    vitest.spyOn(scroll.emitter, 'emit');
+    vi.spyOn(scroll.emitter, 'emit');
     scroll.domNode.firstChild?.appendChild(document.createTextNode('!'));
     await sleep(1);
     expect(scroll.emitter.emit).toHaveBeenCalledWith(
@@ -54,7 +54,7 @@ describe('Scroll', () => {
   test('prevent dragstart', () => {
     const scroll = createScroll('<p>Hello World!</p>');
     const dragstart = new Event('dragstart');
-    vitest.spyOn(dragstart, 'preventDefault');
+    vi.spyOn(dragstart, 'preventDefault');
     scroll.domNode.dispatchEvent(dragstart);
     expect(dragstart.preventDefault).toHaveBeenCalled();
   });

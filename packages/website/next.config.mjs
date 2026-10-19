@@ -4,6 +4,7 @@ import env from './env.js';
 /** @type {import('next').NextConfig} */
 export default withMDX()({
   output: 'export',
+  eslint: { ignoreDuringBuilds: true },
   images: {
     unoptimized: true,
   },

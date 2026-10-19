@@ -1,4 +1,5 @@
-import { assertType, expectTypeOf } from 'vitest';
+const assertType = <T>(value: T): T => value;
+const expectTypeOf = assertType;
 import Quill, { Delta } from '../../src/quill.js';
 import type { EmitterSource, Parchment, Range } from '../../src/quill.js';
 import type { default as Block, BlockEmbed } from '../../src/blots/block.js';

@@ -19,13 +19,16 @@ class Uploader extends Module<UploaderOptions> {
       let native: ReturnType<typeof document.createRange> | null = null;
       if (document.caretRangeFromPoint) {
         native = document.caretRangeFromPoint(e.clientX, e.clientY);
-        // @ts-expect-error
-      } else if (document.caretPositionFromPoint) {
-        // @ts-expect-error
-        const position = document.caretPositionFromPoint(e.clientX, e.clientY);
-        native = document.createRange();
-        native.setStart(position.offsetNode, position.offset);
-        native.setEnd(position.offsetNode, position.offset);
+      } else {
+        const caretDocument = document as Document & {
+          caretPositionFromPoint?: (x: number, y: number) => { offsetNode: Node; offset: number } | null;
+        };
+        const position = caretDocument.caretPositionFromPoint?.(e.clientX, e.clientY);
+        if (position) {
+          native = document.createRange();
+          native.setStart(position.offsetNode, position.offset);
+          native.setEnd(position.offsetNode, position.offset);
+        }
       }
 
       const normalized = native && quill.selection.normalizeNative(native);

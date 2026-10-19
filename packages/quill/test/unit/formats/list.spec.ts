@@ -4,7 +4,7 @@ import {
   createRegistry,
 } from '../__helpers__/factory.js';
 import Editor from '../../../src/core/editor.js';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import List, { ListContainer } from '../../../src/formats/list.js';
 import IndentClass from '../../../src/formats/indent.js';
 import { AlignClass } from '../../../src/formats/align.js';

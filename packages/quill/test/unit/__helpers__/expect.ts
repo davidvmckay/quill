@@ -1,4 +1,4 @@
-import { expect } from 'vitest';
+import { expect } from 'bun:test';
 import { normalizeHTML } from './utils.js';
 
 const sortAttributes = (element: HTMLElement) => {
@@ -28,7 +28,7 @@ expect.extend({
     const receivedDOM = document.createElement('div');
     const expectedDOM = document.createElement('div');
     receivedDOM.innerHTML = normalizeHTML(
-      typeof received === 'string' ? received : received.innerHTML,
+      typeof received === 'string' ? received : (received as HTMLElement).innerHTML,
     );
     expectedDOM.innerHTML = normalizeHTML(expected);
 
@@ -54,10 +54,9 @@ expect.extend({
     return {
       pass: false,
       message: () =>
-        `HTMLs don't match.\n${this.utils.diff(
-          this.utils.stringify(receivedDOM),
-          this.utils.stringify(expectedDOM),
-        )}`,
+        `HTMLs differ.
+Received: ${receivedDOM.innerHTML}
+Expected: ${expectedDOM.innerHTML}`,
     };
   },
 });

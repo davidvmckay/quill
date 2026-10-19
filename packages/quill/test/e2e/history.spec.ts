@@ -1,5 +1,5 @@
-import { expect } from '@playwright/test';
-import type { Page } from '@playwright/test';
+import { expect } from 'bun:test';
+import type { Page } from '../browser/page.js';
 import { test } from './fixtures/index.js';
 import { SHORTKEY } from './utils/index.js';
 
@@ -38,10 +38,11 @@ test.describe('history', () => {
     expect(await editorPage.getContents()).toEqual([{ insert: '1234\n' }]);
   });
 
-  test('clipboard', async ({ clipboard, page, editorPage }) => {
+  test.clipboard('clipboard', async ({ clipboard, page, editorPage }) => {
     await editorPage.moveCursorAfterText('2');
     await clipboard.writeText('a');
     await clipboard.paste();
+    expect(await editorPage.getContents()).toEqual([{ insert: '12a34\n' }]);
     await undo(page);
     expect(await editorPage.getContents()).toEqual([{ insert: '1234\n' }]);
   });

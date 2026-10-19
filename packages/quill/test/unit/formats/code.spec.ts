@@ -4,7 +4,7 @@ import {
   createScroll as baseCreateScroll,
   createRegistry,
 } from '../__helpers__/factory.js';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import CodeBlock, {
   Code,
   CodeBlockContainer,

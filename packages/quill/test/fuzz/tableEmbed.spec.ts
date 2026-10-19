@@ -7,7 +7,7 @@ import type {
   TableRowColumnOp,
 } from '../../src/modules/tableEmbed.js';
 import { choose, randomInt } from './__helpers__/utils.js';
-import { beforeAll, describe, expect, test } from 'vitest';
+import { beforeAll, describe, expect, test } from 'bun:test';
 
 const getRandomRowColumnId = () => {
   const characters = 'abcdefghijklmnopqrstuvwxyz0123456789';

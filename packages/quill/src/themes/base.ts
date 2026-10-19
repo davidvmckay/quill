@@ -1,4 +1,4 @@
-import { merge } from 'lodash-es';
+import { merge } from '../utils/object.js';
 import type Quill from '../core/quill.js';
 import Emitter from '../core/emitter.js';
 import Theme from '../core/theme.js';
@@ -298,7 +298,7 @@ class BaseTooltip extends Tooltip {
       }
       case 'video': {
         value = extractVideoUrl(value);
-      } // eslint-disable-next-line no-fallthrough
+      }
       case 'formula': {
         if (!value) break;
         const range = this.quill.getSelection(true);
@@ -337,7 +337,6 @@ function extractVideoUrl(url: string) {
       match[2]
     }?showinfo=0`;
   }
-  // eslint-disable-next-line no-cond-assign
   if ((match = url.match(/^(?:(https?):\/\/)?(?:www\.)?vimeo\.com\/(\d+)/))) {
     return `${match[1] || 'https'}://player.vimeo.com/video/${match[2]}/`;
   }

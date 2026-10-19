@@ -6,7 +6,7 @@ import {
 import Editor from '../../../src/core/editor.js';
 import Header from '../../../src/formats/header.js';
 import Italic from '../../../src/formats/italic.js';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 
 const createScroll = (html: string) =>
   baseCreateScroll(html, createRegistry([Header, Italic]));

@@ -12,7 +12,8 @@
     }
   },
   "workspaces": [
-    "packages/*"
+    "packages/quill",
+    "packages/quill-delta"
   ],
   "license": "BSD-3-Clause",
   "repository": {
@@ -28,12 +29,12 @@
     "build:website": "bun run --bun --cwd packages/website build",
     "start": "bun run --cwd packages/quill start",
     "start:website": "NEXT_PUBLIC_LOCAL_QUILL=true bun run --bun --cwd packages/website start",
-    "lint": "bun run --cwd packages/quill lint",
     "test": "bun run --cwd packages/quill test",
     "test:unit": "bun run --cwd packages/quill test:unit",
     "test:e2e": "bun run --cwd packages/quill test:e2e",
     "test:security": "bun run --cwd packages/quill test:security",
-    "verify": "bun run --cwd packages/quill verify"
+    "verify": "bun run --cwd packages/quill verify",
+    "typecheck": "bun run --cwd packages/quill typecheck && bun run --cwd packages/quill-delta typecheck"
   },
   "keywords": [
     "quill",

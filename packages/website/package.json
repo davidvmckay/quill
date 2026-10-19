@@ -10,7 +10,6 @@
     "dev": "bun --bun next dev --port ${PORT:-9000}",
     "start": "npm run dev",
     "build": "next build",
-    "lint": "next lint",
     "serve": "npm run serve"
   },
   "dependencies": {
@@ -26,7 +25,6 @@
     "@svgr/webpack": "^8.1.0",
     "@types/mdx": "^2.0.10",
     "classnames": "^2.3.2",
-    "eslint-config-next": "^14.1.0",
     "lz-string": "^1.5.0",
     "next": "^14.0.4",
     "next-mdx-remote": "^4.4.1",
@@ -34,9 +32,6 @@
     "react-dom": "^18.2.0",
     "react-helmet": "^6.1.0",
     "slugify": "^1.6.5"
-  },
-  "prettier": {
-    "singleQuote": true
   },
   "devDependencies": {
     "http-proxy": "^1.18.1",

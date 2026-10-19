@@ -5,7 +5,7 @@ import {
   createRegistry,
 } from '../__helpers__/factory.js';
 import { ColorStyle } from '../../../src/formats/color.js';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test } from 'bun:test';
 import Bold from '../../../src/formats/bold.js';
 
 const createScroll = (html: string) =>

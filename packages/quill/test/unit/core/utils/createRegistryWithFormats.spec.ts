@@ -1,5 +1,5 @@
 import '../../../../src/quill.js';
-import { describe, expect, test, vitest } from 'vitest';
+import { describe, expect, test, vi } from 'bun:test';
 import createRegistryWithFormats from '../../../../src/core/utils/createRegistryWithFormats.js';
 import { globalRegistry } from '../../../../src/core/quill.js';
 import logger from '../../../../src/core/logger.js';
@@ -55,7 +55,7 @@ describe('createRegistryWithFormats', () => {
 
     sourceRegistry.register(InfiniteBlot);
 
-    const logError = vitest.spyOn(debug, 'error');
+    const logError = vi.spyOn(debug, 'error');
     const registry = createRegistryWithFormats(
       ['infinite-blot'],
       sourceRegistry,
@@ -69,7 +69,7 @@ describe('createRegistryWithFormats', () => {
   });
 
   test('report missing formats', () => {
-    const logError = vitest.spyOn(debug, 'error');
+    const logError = vi.spyOn(debug, 'error');
     const registry = createRegistryWithFormats(
       ['my-unknown'],
       globalRegistry,

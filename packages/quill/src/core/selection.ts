@@ -1,5 +1,5 @@
 import { LeafBlot, Scope } from 'parchment';
-import { cloneDeep, isEqual } from 'lodash-es';
+import { cloneDeep, isEqual } from '../utils/object.js';
 import Emitter from './emitter.js';
 import type { EmitterSource } from './emitter.js';
 import logger from './logger.js';
@@ -476,7 +476,7 @@ class Selection {
 function contains(parent: Node, descendant: Node) {
   try {
     // Firefox inserts inaccessible nodes around video elements
-    descendant.parentNode; // eslint-disable-line @typescript-eslint/no-unused-expressions
+    descendant.parentNode;
   } catch (e) {
     return false;
   }

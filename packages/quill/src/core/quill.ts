@@ -1,4 +1,4 @@
-import { merge } from 'lodash-es';
+import { merge } from '../utils/object.js';
 import * as Parchment from 'parchment';
 import type { Op } from 'quill-delta';
 import Delta from 'quill-delta';
@@ -225,7 +225,7 @@ class Quill {
     this.editor = new Editor(this.scroll);
     this.selection = new Selection(this.scroll, this.emitter);
     this.composition = new Composition(this.scroll, this.emitter);
-    this.theme = new this.options.theme(this, this.options); // eslint-disable-line new-cap
+    this.theme = new this.options.theme(this, this.options);
     this.keyboard = this.theme.addModule('keyboard');
     this.clipboard = this.theme.addModule('clipboard');
     this.history = this.theme.addModule('history');
@@ -395,7 +395,6 @@ class Quill {
     source?: EmitterSource,
   ): Delta {
     let formats: Record<string, unknown>;
-    // eslint-disable-next-line prefer-const
     [index, length, formats, source] = overload(
       index,
       length,
@@ -442,7 +441,6 @@ class Quill {
     source?: EmitterSource,
   ): Delta {
     let formats: Record<string, unknown>;
-    // eslint-disable-next-line prefer-const
     [index, length, formats, source] = overload(
       // @ts-expect-error
       index,
@@ -604,7 +602,6 @@ class Quill {
     source?: EmitterSource,
   ): Delta {
     let formats: Record<string, unknown>;
-    // eslint-disable-next-line prefer-const
     // @ts-expect-error
     [index, , formats, source] = overload(index, 0, name, value, source);
     return modify.call(
@@ -896,7 +893,7 @@ function modify(
   const change = modifier();
   if (range != null) {
     if (index === true) {
-      index = range.index; // eslint-disable-line prefer-destructuring
+      index = range.index;
     }
     if (shift == null) {
       range = shiftRange(range, change, source);
@@ -970,14 +967,14 @@ function overload(
       value = name;
       name = length;
       // @ts-expect-error
-      length = index.length; // eslint-disable-line prefer-destructuring
+      length = index.length;
       // @ts-expect-error
-      index = index.index; // eslint-disable-line prefer-destructuring
+      index = index.index;
     } else {
       // @ts-expect-error
-      length = index.length; // eslint-disable-line prefer-destructuring
+      length = index.length;
       // @ts-expect-error
-      index = index.index; // eslint-disable-line prefer-destructuring
+      index = index.index;
     }
   } else if (typeof length !== 'number') {
     // @ts-expect-error

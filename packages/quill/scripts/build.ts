@@ -1,6 +1,5 @@
 import { cp, mkdir, rm } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
-import stylus from 'stylus';
 import { optimize } from 'svgo';
 
 export const packageRoot = resolve(import.meta.dir, '..');
@@ -24,7 +23,7 @@ async function svgText(path: string) {
   return svgCache.get(path)!;
 }
 
-const svgPlugin: Bun.BunPlugin = {
+export const svgPlugin: Bun.BunPlugin = {
   name: 'quill-inline-svg',
   setup(build) {
     build.onLoad({ filter: /\.svg$/ }, async ({ path }) => ({
@@ -73,6 +72,12 @@ export async function buildLibrary({
   minify = true,
   declarations = true,
 } = {}) {
+  const delta = Bun.spawn([process.execPath, 'run', 'build'], {
+    cwd: join(packageRoot, '../quill-delta'),
+    stdout: 'inherit',
+    stderr: 'inherit',
+  });
+  if (await delta.exited) throw new Error('Internal Delta build failed');
   svgCache.clear();
   await rm(distRoot, { recursive: true, force: true });
   await mkdir(join(distRoot, 'dist'), { recursive: true });
@@ -110,16 +115,20 @@ export async function buildLibrary({
     if (!result.success)
       throw new AggregateError(result.logs, `${name} build failed`);
   }
-  for (const theme of ['core', 'snow', 'bubble']) {
-    const filename = join(sourceRoot, 'assets', `${theme}.styl`);
-    const css = stylus(await Bun.file(filename).text())
-      .set('filename', filename)
-      .set('compress', minify)
-      .render();
-    await Bun.write(
-      join(distRoot, 'dist', `quill.${theme}.css`),
-      `${banner}\n${css}`,
-    );
+  const styles = await Bun.build({
+    entrypoints: ['core', 'snow', 'bubble'].map((theme) =>
+      join(sourceRoot, 'assets', `${theme}.css`),
+    ),
+    outdir: join(distRoot, 'dist'),
+    naming: 'quill.[name].[ext]',
+    target: 'browser',
+    minify,
+  });
+  if (!styles.success)
+    throw new AggregateError(styles.logs, 'Stylesheet build failed');
+  for (const stylesheet of styles.outputs) {
+    // Bun's banner option applies to JavaScript; retain the CSS license too.
+    await Bun.write(stylesheet.path, `${banner}\n${await stylesheet.text()}`);
   }
   await cp(join(sourceRoot, 'assets'), join(distRoot, 'assets'), {
     recursive: true,
@@ -127,6 +136,11 @@ export async function buildLibrary({
   for (const filename of ['package.json', 'LICENSE']) {
     await cp(join(packageRoot, filename), join(distRoot, filename));
   }
+  await mkdir(join(distRoot, 'licenses'), { recursive: true });
+  await cp(
+    join(packageRoot, '../quill-delta/LICENSE'),
+    join(distRoot, 'licenses/quill-delta-LICENSE'),
+  );
   const readme = await Bun.file(join(packageRoot, 'README.md')).text();
   await Bun.write(
     join(distRoot, 'README.md'),

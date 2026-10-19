@@ -1,5 +1,5 @@
 import Delta from 'quill-delta';
-import { describe, expect, test, vitest } from 'vitest';
+import { describe, expect, test, vi } from 'bun:test';
 import Quill from '../../../src/core.js';
 import { getLastChangeIndex } from '../../../src/modules/history.js';
 import type { HistoryOptions } from '../../../src/modules/history.js';
@@ -96,11 +96,11 @@ describe('History', () => {
     test('emits selection changes', () => {
       const { quill } = setup({ delay: 0 });
       quill.insertText(0, 'foo');
-      const change = vitest.fn();
+      const change = vi.fn();
       quill.on('selection-change', change);
       quill.history.undo();
 
-      expect(change).toHaveBeenCalledOnce();
+      expect(change).toHaveBeenCalledTimes(1);
       expect(change).toHaveBeenCalledWith(expect.anything(), null, 'user');
     });
 

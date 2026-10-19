@@ -1,6 +1,4 @@
 .*
-!.eslintrc.json
-!.eslintignore
 !.npmignore
 !.gitignore
 !.github

@@ -1,0 +1,18 @@
+@import './core.css';
+@import './base.css';
+@import './snow/toolbar.css';
+@import './snow/tooltip.css';
+
+.ql-snow {
+  --ql-active-color: #06c;
+  --ql-border-color: #ccc;
+  --ql-background-color: #fff;
+  --ql-inactive-color: #444;
+}
+
+.ql-snow a {
+  color: #06c;
+}
+.ql-container.ql-snow {
+  border: 1px solid #ccc;
+}
