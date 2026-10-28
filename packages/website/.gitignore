@@ -3,3 +3,7 @@ node_modules
 .next
 out
 certificates
+# Generated Next.js 14 loader; edit next.config.ts.
+next.config.mjs
+next-env.d.ts
+.bun

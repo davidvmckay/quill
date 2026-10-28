@@ -1,7 +1,7 @@
 {
-  "name": "quill-monorepo",
+  "name": "quill",
   "version": "2.0.3",
-  "description": "Quill development environment",
+  "description": "Quill editor, Parchment document model, and Delta operations",
   "private": true,
   "author": "Jason Chen <jhchen7@gmail.com>",
   "homepage": "https://quilljs.com",
@@ -11,10 +11,6 @@
       "website": 9000
     }
   },
-  "workspaces": [
-    "packages/quill",
-    "packages/quill-delta"
-  ],
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
@@ -24,17 +20,22 @@
     "url": "https://github.com/slab/quill/issues"
   },
   "scripts": {
-    "build": "bun run build:quill",
-    "build:quill": "bun run --cwd packages/quill build",
+    "build": "bun scripts/build.ts",
     "build:website": "bun run --bun --cwd packages/website build",
-    "start": "bun run --cwd packages/quill start",
+    "start": "bun scripts/serve.ts --port 9080 --watch",
     "start:website": "NEXT_PUBLIC_LOCAL_QUILL=true bun run --bun --cwd packages/website start",
-    "test": "bun run --cwd packages/quill test",
-    "test:unit": "bun run --cwd packages/quill test:unit",
-    "test:e2e": "bun run --cwd packages/quill test:e2e",
-    "test:security": "bun run --cwd packages/quill test:security",
-    "verify": "bun run --cwd packages/quill verify",
-    "typecheck": "bun run --cwd packages/quill typecheck && bun run --cwd packages/quill-delta typecheck"
+    "build:quill": "bun run build",
+    "test": "bun run test:unit && bun run test:fuzz && bun run test:e2e",
+    "test:unit": "bun scripts/test.ts unit",
+    "test:unit:watch": "bun scripts/test.ts unit --watch",
+    "test:fuzz": "bun scripts/test.ts fuzz",
+    "test:e2e": "bun scripts/test.ts e2e",
+    "test:security": "bun run test:unit core/semantic-html.spec.ts modules/syntax.spec.ts && bun run test:e2e distribution.spec.ts",
+    "test:package": "bun scripts/check-package.ts",
+    "verify": "bun scripts/verify.ts",
+    "typecheck": "bun check && bun check -p src/parchment/tsconfig.json && bun check -p src/delta/tsconfig.json && bun check -p tsconfig.tools.json",
+    "typecheck:website": "bun run --cwd packages/website typecheck",
+    "test:website": "bun run --cwd packages/website test"
   },
   "keywords": [
     "quill",
@@ -48,5 +49,75 @@
   "engines": {
     "bun": ">=1.4.3"
   },
-  "packageManager": "bun@1.4.3"
+  "packageManager": "bun@1.4.3",
+  "type": "module",
+  "main": "./dist/quill.js",
+  "module": "./dist/quill.js",
+  "types": "./dist/quill.d.ts",
+  "dependencies": {
+    "eventemitter3": "^5.0.1",
+    "fast-diff": "^1.3.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.3",
+    "@types/highlight.js": "^9.12.4",
+    "@types/jsdom": "^30.0.0",
+    "@types/node": "^20.10.0",
+    "axe-core": "4.13.0",
+    "highlight.js": "^9.18.1",
+    "jsdom": "^22.1.0",
+    "playwright": "1.54.1",
+    "svgo": "^3.2.0",
+    "typescript": "^5.4.2"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/quill.d.ts",
+      "import": "./dist/quill.js",
+      "default": "./dist/quill.js"
+    },
+    "./core": {
+      "types": "./dist/core.d.ts",
+      "import": "./dist/core.js",
+      "default": "./dist/core.js"
+    },
+    "./parchment": {
+      "types": "./dist/parchment/parchment.d.ts",
+      "import": "./dist/parchment/parchment.js",
+      "default": "./dist/parchment/parchment.js"
+    },
+    "./delta": {
+      "types": "./dist/delta/Delta.d.ts",
+      "import": "./dist/delta/Delta.js",
+      "default": "./dist/delta/Delta.js"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/dist/*",
+    "./assets/*": "./dist/assets/*",
+    "./*.js": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js",
+      "default": "./dist/*.js"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js",
+      "default": "./dist/*.js"
+    }
+  },
+  "sideEffects": [
+    "**/*.css",
+    "./dist/quill.js",
+    "./dist/core.js",
+    "./dist/core/emitter.js",
+    "./dist/dist/*.js"
+  ],
+  "files": [
+    "dist",
+    "licenses",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md",
+    ".github/DEVELOPMENT.md"
+  ]
 }

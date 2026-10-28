@@ -4,6 +4,28 @@ This repository maintains Quill 2 for internal use, including security fixes,
 HTML export fidelity, and keyboard accessibility improvements. It is independent
 of the upstream repository's CI and public release process.
 
+The library is one package, with one root dependency list, lockfile, and
+`node_modules`. Its source lives in `src/`, with the Parchment model in
+`src/parchment/` and Delta operations in `src/delta/`.
+
+## Use
+
+```javascript
+import Quill from 'quill';
+import Core from 'quill/core';
+import { Registry, InlineBlot } from 'quill/parchment';
+import Delta from 'quill/delta';
+import Bold from 'quill/formats/bold';
+import 'quill/dist/quill.snow.css';
+```
+
+Choose the imports your application needs. A Parchment-only import has no editor
+or Delta dependency. A Delta-only import has no editor or Parchment dependency.
+ES modules preserve component boundaries, and package side-effect metadata keeps
+CSS and editor initialization while allowing unused components to be omitted.
+
+The legacy standalone browser assets remain available under `quill/dist/`.
+
 ## Build
 
 Install Bun 1.4.3 or newer, then run:
@@ -11,12 +33,13 @@ Install Bun 1.4.3 or newer, then run:
 ```sh
 bun install --frozen-lockfile
 bun run build
+bun pm pack --destination .bun
 ```
 
-The distribution is in `packages/quill/dist/`. It includes JavaScript modules,
-TypeScript declarations, standalone full/core browser bundles, and core/Snow/
-Bubble CSS. The internal Delta dependency is built in `packages/quill-delta/dist/`;
-distribute both directories through your internal package mechanism.
+The build writes JavaScript modules, declarations, browser bundles, CSS, and
+licenses to `dist/`. The local archive contains one `quill` package with all three
+components and their public entry points. Distribute that archive through your
+internal mechanism; packing does not publish it.
 
 ## Develop and verify
 
@@ -29,6 +52,10 @@ bun run verify
 Chrome/Chromium supplies Bun.WebView's browser backend; macOS also supplies
 native WebKit. Firefox uses Playwright as its driver. All tests use `bun test`,
 and `bun run typecheck` uses Bun's built-in checker.
+
+Maintained source and build/test tools use TypeScript. The optional documentation
+site and its playgrounds also use TypeScript/TSX with strict Bun checks; generated
+browser JavaScript and documentation code snippets remain JavaScript.
 
 The development editor runs at `http://127.0.0.1:9080`. See
 [development instructions](.github/DEVELOPMENT.md) for targeted tests, security

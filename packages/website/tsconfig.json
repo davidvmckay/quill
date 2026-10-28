@@ -1,0 +1,56 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2021"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "preserve",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "types": [
+      "bun",
+      "react",
+      "react-dom"
+    ],
+    "paths": {
+      "quill": [
+        "../../dist/quill.d.ts"
+      ],
+      "quill/parchment": [
+        "../../dist/parchment/parchment.d.ts"
+      ],
+      "quill/delta": [
+        "../../dist/delta/Delta.d.ts"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "allowJs": false,
+    "incremental": false
+  },
+  "include": [
+    "env.ts",
+    "next.config.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "content/**/*.ts",
+    "scripts/**/*.ts",
+    "test/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "out"
+  ]
+}

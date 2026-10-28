@@ -1,5 +1,5 @@
 {
-  "template": "static",
+  "template": "vanilla-ts",
   "externalResources": [
     "{{site.highlightjs}}/highlight.min.js",
     "{{site.highlightjs}}/styles/atom-one-dark.min.css",
@@ -8,5 +8,6 @@
     "{{site.cdn}}/quill.snow.css",
     "{{site.cdn}}/quill.bubble.css",
     "{{site.cdn}}/quill.js"
-  ]
+  ],
+  "activeFile": "index.ts"
 }

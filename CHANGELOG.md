@@ -2,11 +2,13 @@
 
 ## Internal maintenance
 
+- Combine Quill, Parchment, and Delta into one package and dependency installation, with independent subpath exports, declarations, and consumer tree-shaking checks.
 - Replace the library's Webpack/Babel build and development server with Bun.
 - Remove ESLint, Prettier, and Vitest; use `bun check` for typechecking and `bun test` for units, fuzzing, and browser checks. TypeScript remains only for declaration emission.
 - Drive Chrome and macOS WebKit through Bun.WebView, retaining Playwright as the Firefox driver. Preserve real-browser geometry, keyboard, clipboard, and accessibility coverage.
-- Replace Lodash calls with focused shared utilities adapted from m-dash, and adapt Delta into a local workspace package to remove its Lodash dependencies.
+- Replace Lodash calls with focused shared utilities adapted from m-dash, and inline Delta source to remove its Lodash dependencies.
 - Separate the optional documentation site's installation from the library dependency graph.
+- Convert the remaining JavaScript/JSX source and configuration to TypeScript/TSX, with strict Bun checks for the documentation site and typed interactive playgrounds.
 - Replace Stylus sources with plain CSS and bundle the core, Snow, and Bubble stylesheets with Bun.
 - Use a Bun lockfile and local verification commands; remove inherited GitHub CI and public release automation.
 - Preserve ordinary spaces in HTML exports and significant whitespace with `white-space: pre-wrap`, including clipboard round trips.

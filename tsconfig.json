@@ -1,21 +1,28 @@
 {
-  "ts-node": {
-    "compilerOptions": {
-      "esModuleInterop": true,
-      "module": "commonjs"
-    }
-  },
   "compilerOptions": {
+    "outDir": "dist",
     "allowSyntheticDefaultImports": true,
     "target": "ES2021",
     "sourceMap": true,
-    "declaration": true,
-    "module": "ES2020",
-    "moduleResolution": "node",
-    "noEmit": true,
+    "resolveJsonModule": true,
+    "declaration": false,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "strictNullChecks": true,
     "noImplicitAny": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "types": [
+      "bun",
+      "highlight.js"
+    ],
+    "skipLibCheck": true,
+    "strict": false,
+    "rootDir": ".",
+    "noEmit": true,
+    "esModuleInterop": true
   },
-  "include": ["./**/*"]
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts"
+  ]
 }
